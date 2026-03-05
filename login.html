@@ -312,6 +312,7 @@
         const params  = new URLSearchParams(window.location.search);
         const portalKey = params.get('portal') || 'iol';
         const portal  = PORTALS[portalKey] || PORTALS.iol;
+        const callbackUrl = params.get('callback') || '';
 
         /* ── Telegram WebApp ────────────────────────────── */
         const tg = window.Telegram && window.Telegram.WebApp;
@@ -378,20 +379,69 @@
                     throw new Error('El servidor no devolvió token de sesión.');
                 }
 
-                showStatus('Sesión iniciada. Cerrando...', 'success');
+                showStatus('Sesión iniciada. Enviando al bot...', 'success');
                 btn.textContent = '✓';
 
-                const payload = JSON.stringify({
+                const payload = {
                     portal:        portalKey,
                     cuit:          username,
                     refresh_token: data.refresh_token,
-                });
+                };
 
-                if (tg && tg.sendData) {
-                    setTimeout(() => tg.sendData(payload), 700);
+                // Determine data delivery method:
+                // 1. If callback URL available (InlineKeyboardButton): POST to server
+                // 2. If sendData available (KeyboardButton): use sendData
+                // 3. Fallback: show dev message
+                if (callbackUrl) {
+                    try {
+                        payload.init_data = (tg && tg.initData) ? tg.initData : '';
+                        const cbResp = await fetch(callbackUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'ngrok-skip-browser-warning': 'true',
+                            },
+                            body: JSON.stringify(payload),
+                        });
+                        if (!cbResp.ok) {
+                            const cbErr = await cbResp.json().catch(() => ({}));
+                            const errMsg = cbErr.error || 'Error al enviar datos al bot';
+                            if (errMsg === 'premium_required') {
+                                throw new Error('Esta función requiere un plan Premium o Pro.');
+                            }
+                            throw new Error(errMsg);
+                        }
+                        showStatus('✓ ¡Sesión guardada! Cerrando...', 'success');
+                        if (tg) {
+                            let closeAttempts = 0;
+                            const tryClose = () => {
+                                closeAttempts++;
+                                try { tg.close(); } catch (_) {}
+                                if (closeAttempts < 3) {
+                                    setTimeout(tryClose, 1000);
+                                } else {
+                                    showStatus('✓ ¡Sesión guardada! Podés cerrar esta ventana.', 'success');
+                                }
+                            };
+                            setTimeout(tryClose, 1500);
+                        }
+                    } catch (cbError) {
+                        console.error('Callback error:', cbError);
+                        showStatus(cbError.message, 'error');
+                        resetBtn();
+                    }
+                } else if (tg && tg.sendData) {
+                    // sendData() no funciona con InlineKeyboardButton (solo con KeyboardButton).
+                    // Mostrar error claro en vez de fallar silenciosamente.
+                    showStatus(
+                        'Error de configuración del servidor: no se puede enviar la sesión al bot. '
+                        + 'Contactá al administrador (falta WEBAPP_CALLBACK_URL).',
+                        'error'
+                    );
+                    resetBtn();
                 } else {
                     // Modo desarrollo (fuera de Telegram)
-                    console.log('[dev] sendData payload:', payload);
+                    console.log('[dev] payload:', payload);
                     showStatus('Token OK (modo dev — abrí desde Telegram para enviar al bot).', 'success');
                     resetBtn();
                 }
