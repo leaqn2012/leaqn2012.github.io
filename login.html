@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Plataforma Digital del Poder Judicial de Mendoza | Inicio de sesión</title>
+    <title>Inicio de sesión</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -301,18 +301,69 @@
                 tokenUrl: 'https://iol.jus.mendoza.gov.ar/auth/realms/iol-mendoza/protocol/openid-connect/token',
                 clientId: 'iol-ui',
                 scope: 'openid offline_access',
+                serverAuth: false,
             },
             pjn: {
-                tokenUrl: 'https://sso.pjn.gov.ar/auth/realms/pjn/protocol/openid-connect/token',
-                clientId: 'pjn-portal',
-                scope: 'openid',
+                // PJN NO soporta grant_type=password, la auth se hace server-side
+                serverAuth: true,
             }
+        };
+
+        const UI_CONFIG = {
+            iol: {
+                title: 'Plataforma Digital del Poder Judicial de Mendoza',
+                userPlaceholder: 'CUIT',
+                validationHint: 'Completá CUIT y contraseña.',
+                logoUrl: 'https://iol.jus.mendoza.gov.ar/auth/resources/grg6s/login/iol-mendoza/img/logo-transparente.png',
+                logoAlt: 'Poder Judicial Provincia de Mendoza',
+                fallbackTexts: ['PODER', 'JUDICIAL', 'MENDOZA'],
+                registerUrl: 'https://iol.jus.mendoza.gov.ar/iol-ui/p/inicio',
+                resetUrl: 'https://iol.jus.mendoza.gov.ar/auth/realms/iol-mendoza/login-actions/reset-credentials',
+                securityNote: 'Tu contraseña se envía <b>directamente</b> al servidor oficial del Poder Judicial (HTTPS). <b>Nunca pasa por nuestros servidores.</b>',
+            },
+            pjn: {
+                title: 'Portal PJN Federal',
+                userPlaceholder: 'CUIL / CUIT',
+                validationHint: 'Completá CUIL/CUIT y contraseña.',
+                logoUrl: null,
+                logoAlt: 'Poder Judicial de la Nación',
+                fallbackTexts: ['PODER', 'JUDICIAL', 'DE LA NACIÓN'],
+                registerUrl: 'https://sso.pjn.gov.ar/auth/realms/pjn/login-actions/registration?client_id=pjn-portal',
+                resetUrl: 'https://sso.pjn.gov.ar/auth/realms/pjn/login-actions/reset-credentials?client_id=pjn-portal',
+                securityNote: 'Tu contraseña se envía por conexión segura (HTTPS) para obtener un token de sesión. <b>Se usa una sola vez y no se almacena.</b>',
+            },
         };
 
         const params  = new URLSearchParams(window.location.search);
         const portalKey = params.get('portal') || 'iol';
         const portal  = PORTALS[portalKey] || PORTALS.iol;
+        const ui      = UI_CONFIG[portalKey] || UI_CONFIG.iol;
         const callbackUrl = params.get('callback') || '';
+
+        /* ── Aplicar UI dinámica ──────────────────────── */
+        document.title = ui.title + ' | Inicio de sesión';
+        document.getElementById('username').placeholder = ui.userPlaceholder;
+        document.querySelector('.security-note').innerHTML = ui.securityNote;
+        document.querySelector('.links a:first-child').href = ui.registerUrl;
+        document.querySelector('.links a:last-child').href = ui.resetUrl;
+
+        // Logo
+        const logoImg = document.getElementById('logo-img');
+        const logoFallback = document.getElementById('logo-fallback');
+        if (ui.logoUrl) {
+            logoImg.src = ui.logoUrl;
+            logoImg.alt = ui.logoAlt;
+        } else {
+            logoImg.style.display = 'none';
+            logoFallback.style.display = 'flex';
+        }
+        // Actualizar textos del SVG fallback
+        const svgTexts = logoFallback.querySelectorAll('text');
+        if (svgTexts.length >= 3 && ui.fallbackTexts) {
+            svgTexts[0].textContent = ui.fallbackTexts[0];
+            svgTexts[1].textContent = ui.fallbackTexts[1];
+            svgTexts[2].textContent = ui.fallbackTexts[2];
+        }
 
         /* ── Telegram WebApp ────────────────────────────── */
         const tg = window.Telegram && window.Telegram.WebApp;
@@ -345,7 +396,7 @@
             const password = document.getElementById('password').value;
 
             if (!username || !password) {
-                showStatus('Completá CUIT y contraseña.', 'error');
+                showStatus(ui.validationHint, 'error');
                 return;
             }
 
@@ -354,85 +405,92 @@
             showStatus('Verificando credenciales...', 'loading');
 
             try {
-                const body = new URLSearchParams({
-                    grant_type: 'password',
-                    client_id:  portal.clientId,
-                    username:   username,
-                    password:   password,
-                    scope:      portal.scope,
-                });
+                let payload;
 
-                const resp = await fetch(portal.tokenUrl, {
-                    method:  'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body:    body.toString(),
-                });
+                if (portal.serverAuth) {
+                    // ── Auth server-side (PJN): enviar credenciales al callback ──
+                    // PJN no soporta grant_type=password, el servidor hace el flujo auth code
+                    if (!callbackUrl) {
+                        throw new Error('Error de configuración: falta WEBAPP_CALLBACK_URL.');
+                    }
+                    payload = {
+                        portal:    portalKey,
+                        cuit:      username,
+                        password:  password,
+                        init_data: (tg && tg.initData) ? tg.initData : '',
+                    };
+                } else {
+                    // ── Auth client-side (IOL): grant_type=password directo ──
+                    const body = new URLSearchParams({
+                        grant_type: 'password',
+                        client_id:  portal.clientId,
+                        username:   username,
+                        password:   password,
+                        scope:      portal.scope,
+                    });
 
-                if (!resp.ok) {
-                    const err = await resp.json().catch(() => ({}));
-                    throw new Error(err.error_description || err.error || 'Error de autenticación');
+                    const resp = await fetch(portal.tokenUrl, {
+                        method:  'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body:    body.toString(),
+                    });
+
+                    if (!resp.ok) {
+                        const err = await resp.json().catch(() => ({}));
+                        throw new Error(err.error_description || err.error || 'Error de autenticación');
+                    }
+
+                    const data = await resp.json();
+                    if (!data.refresh_token) {
+                        throw new Error('El servidor no devolvió token de sesión.');
+                    }
+
+                    payload = {
+                        portal:        portalKey,
+                        cuit:          username,
+                        refresh_token: data.refresh_token,
+                    };
                 }
 
-                const data = await resp.json();
-
-                if (!data.refresh_token) {
-                    throw new Error('El servidor no devolvió token de sesión.');
-                }
-
-                showStatus('Sesión iniciada. Enviando al bot...', 'success');
+                showStatus('Enviando al bot...', 'loading');
                 btn.textContent = '✓';
 
-                const payload = {
-                    portal:        portalKey,
-                    cuit:          username,
-                    refresh_token: data.refresh_token,
-                };
-
-                // Determine data delivery method:
-                // 1. If callback URL available (InlineKeyboardButton): POST to server
-                // 2. If sendData available (KeyboardButton): use sendData
-                // 3. Fallback: show dev message
+                // Enviar al bot vía callback URL o sendData
                 if (callbackUrl) {
-                    try {
+                    if (!payload.init_data) {
                         payload.init_data = (tg && tg.initData) ? tg.initData : '';
-                        const cbResp = await fetch(callbackUrl, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'ngrok-skip-browser-warning': 'true',
-                            },
-                            body: JSON.stringify(payload),
-                        });
-                        if (!cbResp.ok) {
-                            const cbErr = await cbResp.json().catch(() => ({}));
-                            const errMsg = cbErr.error || 'Error al enviar datos al bot';
-                            if (errMsg === 'premium_required') {
-                                throw new Error('Esta función requiere un plan Premium o Pro.');
+                    }
+                    const cbResp = await fetch(callbackUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'ngrok-skip-browser-warning': 'true',
+                        },
+                        body: JSON.stringify(payload),
+                    });
+                    if (!cbResp.ok) {
+                        const cbErr = await cbResp.json().catch(() => ({}));
+                        const errMsg = cbErr.error || 'Error al enviar datos al bot';
+                        if (errMsg === 'premium_required') {
+                            throw new Error('Esta función requiere un plan Premium o Pro.');
+                        }
+                        throw new Error(errMsg);
+                    }
+                    showStatus('✓ ¡Sesión guardada! Cerrando...', 'success');
+                    if (tg) {
+                        let closeAttempts = 0;
+                        const tryClose = () => {
+                            closeAttempts++;
+                            try { tg.close(); } catch (_) {}
+                            if (closeAttempts < 3) {
+                                setTimeout(tryClose, 1000);
+                            } else {
+                                showStatus('✓ ¡Sesión guardada! Podés cerrar esta ventana.', 'success');
                             }
-                            throw new Error(errMsg);
-                        }
-                        showStatus('✓ ¡Sesión guardada! Cerrando...', 'success');
-                        if (tg) {
-                            let closeAttempts = 0;
-                            const tryClose = () => {
-                                closeAttempts++;
-                                try { tg.close(); } catch (_) {}
-                                if (closeAttempts < 3) {
-                                    setTimeout(tryClose, 1000);
-                                } else {
-                                    showStatus('✓ ¡Sesión guardada! Podés cerrar esta ventana.', 'success');
-                                }
-                            };
-                            setTimeout(tryClose, 1500);
-                        }
-                    } catch (cbError) {
-                        console.error('Callback error:', cbError);
-                        showStatus(cbError.message, 'error');
-                        resetBtn();
+                        };
+                        setTimeout(tryClose, 1500);
                     }
                 } else if (tg && tg.sendData) {
-                    // sendData() no funciona con InlineKeyboardButton (solo con KeyboardButton).
-                    // Mostrar error claro en vez de fallar silenciosamente.
                     showStatus(
                         'Error de configuración del servidor: no se puede enviar la sesión al bot. '
                         + 'Contactá al administrador (falta WEBAPP_CALLBACK_URL).',
@@ -440,7 +498,6 @@
                     );
                     resetBtn();
                 } else {
-                    // Modo desarrollo (fuera de Telegram)
                     console.log('[dev] payload:', payload);
                     showStatus('Token OK (modo dev — abrí desde Telegram para enviar al bot).', 'success');
                     resetBtn();
