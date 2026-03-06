@@ -25,7 +25,10 @@
             padding: 20px;
         }
 
-        /* ── Card ─────────────────────────────────────── */
+        /* ══════════════════════════════════════════════════
+           TEMA IOL (MENDOZA) — diseño por defecto
+           ══════════════════════════════════════════════════ */
+
         .card {
             background: #ffffff;
             box-shadow: rgba(0, 15, 31, 0.36) 9px 10px 6px -6px;
@@ -38,7 +41,7 @@
             .card { padding: 30px 28px; }
         }
 
-        /* ── Logo ─────────────────────────────────────── */
+        /* ── Logo IOL ──────────────────────────────────── */
         .logo-wrap {
             text-align: center;
             margin-bottom: 35px;
@@ -49,7 +52,6 @@
             max-width: 100%;
         }
 
-        /* Fallback si la imagen no carga */
         .logo-fallback {
             display: none;
             flex-direction: column;
@@ -75,7 +77,7 @@
             letter-spacing: 2px;
         }
 
-        /* ── Inputs ───────────────────────────────────── */
+        /* ── Inputs IOL ────────────────────────────────── */
         .inputs-wrap {
             margin-bottom: 20px;
         }
@@ -91,7 +93,6 @@
             color: #495057;
             background: #ffffff;
             outline: none;
-            /* Overlap borders so they share the middle line */
             margin-bottom: -0.8px;
             position: relative;
             z-index: 0;
@@ -107,7 +108,7 @@
             color: #6c757d;
         }
 
-        /* ── Status messages ──────────────────────────── */
+        /* ── Status messages ────────────────────────────── */
         .status-msg {
             display: none;
             font-size: 13px;
@@ -150,7 +151,7 @@
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* ── Botón INGRESAR ───────────────────────────── */
+        /* ── Botón INGRESAR IOL ──────────────────────── */
         .btn-ingresar {
             display: block;
             width: 100%;
@@ -180,7 +181,7 @@
             cursor: not-allowed;
         }
 
-        /* ── Links ────────────────────────────────────── */
+        /* ── Links IOL ──────────────────────────────── */
         .links {
             text-align: center;
         }
@@ -199,7 +200,7 @@
             color: #2c386b;
         }
 
-        /* ── Nota de seguridad (fuera del card) ────────── */
+        /* ── Nota de seguridad (fuera del card) ──────── */
         .security-note {
             margin-top: 14px;
             text-align: center;
@@ -212,13 +213,267 @@
         .security-note b {
             color: rgba(255, 255, 255, 0.8);
         }
+
+        /* ── Elementos PJN: ocultos por defecto ──────── */
+        #pjn-header,
+        #pjn-card-title,
+        #pjn-footer { display: none; }
+
+
+        /* ══════════════════════════════════════════════════
+           TEMA PJN — clon del formulario oficial
+           sso.pjn.gov.ar
+           ══════════════════════════════════════════════════ */
+
+        body.theme-pjn {
+            background: linear-gradient(180deg, #1976d2 250px, #e0e0e0 250px);
+            justify-content: flex-start;
+            padding: 0;
+        }
+
+        /* ── Header PJN ───────────────────────────────── */
+        body.theme-pjn #pjn-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 20px 30px;
+            color: #ededed;
+        }
+
+        #pjn-header .pjn-title {
+            font-size: 24px;
+            font-weight: 300;
+            line-height: 1.2;
+        }
+
+        #pjn-header .pjn-title .pjn-sub {
+            color: #90caf9;
+            font-weight: 300;
+        }
+
+        #pjn-header .pjn-logo-right {
+            height: 70px;
+            max-width: 280px;
+        }
+
+        @media (max-width: 600px) {
+            body.theme-pjn #pjn-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+                padding: 15px 20px;
+            }
+            #pjn-header .pjn-title { font-size: 18px; }
+            #pjn-header .pjn-logo-right { height: 55px; }
+        }
+
+        /* ── Card PJN ─────────────────────────────────── */
+        body.theme-pjn .card {
+            max-width: 520px;
+            padding: 0;
+            margin-top: 10px;
+            background: linear-gradient(180deg, #1361af 80px, #fff 80px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.16), 0 2px 10px rgba(0,0,0,0.12);
+        }
+
+        /* Ocultar logo IOL en tema PJN */
+        body.theme-pjn .logo-wrap { display: none; }
+
+        /* ── Card title bar PJN ───────────────────────── */
+        body.theme-pjn #pjn-card-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 80px;
+            padding: 5px 20px;
+            color: #fff;
+        }
+
+        #pjn-card-title h4 {
+            font-size: 1.6rem;
+            font-weight: 200;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #pjn-card-title .pjn-icon {
+            font-size: 36px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 480px) {
+            #pjn-card-title h4 { font-size: 1.2rem; }
+            #pjn-card-title { padding: 5px 14px; }
+        }
+
+        /* ── Form area PJN ────────────────────────────── */
+        body.theme-pjn .pjn-form-area {
+            padding: 20px 20px 0;
+        }
+
+        /* Inputs Material Design PJN */
+        body.theme-pjn .inputs-wrap {
+            margin-bottom: 10px;
+        }
+
+        body.theme-pjn .input-field {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        body.theme-pjn .inputs-wrap input {
+            border: none;
+            border-bottom: 0.8px solid #757575;
+            border-radius: 0;
+            padding: 0 0 0 10px;
+            height: 45px;
+            font-size: 15px;
+            color: rgba(0, 0, 0, 0.87);
+            background: transparent;
+            margin-bottom: 0;
+            width: 100%;
+        }
+
+        body.theme-pjn .inputs-wrap input:focus {
+            border-left: none;
+            border-bottom: 1.5px solid #1361af;
+            z-index: auto;
+        }
+
+        body.theme-pjn .inputs-wrap input::placeholder {
+            color: transparent;
+        }
+
+        body.theme-pjn .input-field label {
+            position: absolute;
+            top: 12px;
+            left: 10px;
+            font-size: 15px;
+            color: #757575;
+            pointer-events: none;
+            transition: all 0.2s ease;
+        }
+
+        body.theme-pjn .inputs-wrap input:focus + label,
+        body.theme-pjn .inputs-wrap input:not(:placeholder-shown) + label {
+            top: -12px;
+            left: 0;
+            font-size: 11px;
+            color: #1361af;
+        }
+
+        /* ── Links PJN ────────────────────────────────── */
+        body.theme-pjn .pjn-form-links {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+        body.theme-pjn .pjn-form-links .forgot-link {
+            color: #039be5;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        body.theme-pjn .pjn-form-links .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Botón PJN */
+        body.theme-pjn .btn-ingresar {
+            width: auto;
+            padding: 8px 30px;
+            background: #1361af;
+            border-color: #1361af;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        body.theme-pjn .btn-ingresar:hover:not(:disabled) {
+            background: #166ec5;
+            border-color: #166ec5;
+        }
+
+        body.theme-pjn .btn-ingresar:disabled {
+            background: #5d95d4;
+            border-color: #5d95d4;
+        }
+
+        /* Ocultar links IOL en tema PJN */
+        body.theme-pjn .links { display: none; }
+
+        /* ── Footer PJN (legal + registro) ────────────── */
+        body.theme-pjn #pjn-footer {
+            display: block;
+            padding: 15px 20px 20px;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 15px;
+        }
+
+        #pjn-footer .pjn-legal {
+            font-size: 12.5px;
+            color: rgba(0, 0, 0, 0.87);
+            text-align: center;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        #pjn-footer .pjn-register {
+            text-align: center;
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.87);
+        }
+
+        #pjn-footer .pjn-register a {
+            color: #ffab40;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        #pjn-footer .pjn-register a:hover {
+            text-decoration: underline;
+        }
+
+        /* Nota seguridad PJN */
+        body.theme-pjn .security-note {
+            color: rgba(0, 0, 0, 0.45);
+            margin-top: 16px;
+        }
+
+        body.theme-pjn .security-note b {
+            color: rgba(0, 0, 0, 0.65);
+        }
+
+        /* Status en PJN */
+        body.theme-pjn .status-msg.loading {
+            color: #1361af;
+        }
     </style>
 </head>
 <body>
 
+    <!-- ══ Header PJN (oculto por defecto) ══ -->
+    <div id="pjn-header">
+        <div class="pjn-title">
+            Poder Judicial de la Nación <span class="pjn-sub">Argentina</span>
+        </div>
+        <img
+            class="pjn-logo-right"
+            src="https://sso.pjn.gov.ar/auth/resources/9uunl/login/pjn-sau/img/logo.png"
+            alt="Consejo de la Magistratura - Poder Judicial de la Nación"
+            onerror="this.style.display='none';"
+        >
+    </div>
+
     <div class="card">
 
-        <!-- Logo oficial -->
+        <!-- ══ Logo IOL (visible por defecto) ══ -->
         <div class="logo-wrap">
             <img
                 id="logo-img"
@@ -226,7 +481,6 @@
                 alt="Poder Judicial Provincia de Mendoza"
                 onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';"
             >
-            <!-- Fallback SVG si la imagen no carga -->
             <div id="logo-fallback" class="logo-fallback">
                 <svg class="escudo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="50" cy="50" r="48" fill="#2c386b" stroke="#aaa" stroke-width="2"/>
@@ -237,55 +491,95 @@
             </div>
         </div>
 
-        <!-- Formulario -->
+        <!-- ══ Card title PJN (oculto por defecto) ══ -->
+        <div id="pjn-card-title">
+            <h4>Ingresar a Poder Judicial de la Nación</h4>
+            <span class="pjn-icon">&#x279C;</span>
+        </div>
+
+        <!-- ══ Formulario ══ -->
         <form id="login-form" autocomplete="off" novalidate>
 
-            <!-- Mensajes de estado -->
-            <div id="status" class="status-msg"></div>
+            <div class="pjn-form-area">
 
-            <!-- Inputs -->
-            <div class="inputs-wrap">
-                <input
-                    type="text"
-                    id="username"
-                    name="username"
-                    placeholder="CUIT"
-                    inputmode="numeric"
-                    autocomplete="off"
-                    autocorrect="off"
-                    autocapitalize="off"
-                    spellcheck="false"
-                    required
-                >
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Contraseña"
-                    autocomplete="current-password"
-                    required
-                >
-            </div>
+                <div id="status" class="status-msg"></div>
 
-            <!-- Botón -->
-            <button type="submit" class="btn-ingresar" id="btn-submit">
-                INGRESAR
-            </button>
+                <div class="inputs-wrap">
+                    <div class="input-field">
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="CUIT"
+                            inputmode="numeric"
+                            autocomplete="off"
+                            autocorrect="off"
+                            autocapitalize="off"
+                            spellcheck="false"
+                            required
+                        >
+                        <label for="username" id="label-user" style="display:none;">Usuario</label>
+                    </div>
+                    <div class="input-field">
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Contraseña"
+                            autocomplete="current-password"
+                            required
+                        >
+                        <label for="password" id="label-pass" style="display:none;">Contraseña</label>
+                    </div>
+                </div>
 
-            <!-- Links (igual al portal oficial) -->
-            <div class="links">
-                <a href="https://iol.jus.mendoza.gov.ar/iol-ui/p/inicio" target="_blank" rel="noopener">
-                    Crear Usuario
-                </a>
-                <a href="https://iol.jus.mendoza.gov.ar/auth/realms/iol-mendoza/login-actions/reset-credentials" target="_blank" rel="noopener">
-                    Recuperar Contraseña
-                </a>
+                <!-- Links + botón PJN (row layout) -->
+                <div id="pjn-form-links" class="pjn-form-links" style="display:none;">
+                    <a class="forgot-link" id="pjn-forgot" href="#" target="_blank" rel="noopener">
+                        ¿Ha olvidado su contraseña?
+                    </a>
+                    <button type="submit" class="btn-ingresar" id="btn-submit-pjn" style="display:none;">
+                        INGRESAR
+                    </button>
+                </div>
+
+                <!-- Botón IOL (full width) -->
+                <button type="submit" class="btn-ingresar" id="btn-submit">
+                    INGRESAR
+                </button>
+
+                <!-- Links IOL -->
+                <div class="links" id="iol-links">
+                    <a href="https://iol.jus.mendoza.gov.ar/iol-ui/p/inicio" target="_blank" rel="noopener">
+                        Crear Usuario
+                    </a>
+                    <a href="https://iol.jus.mendoza.gov.ar/auth/realms/iol-mendoza/login-actions/reset-credentials" target="_blank" rel="noopener">
+                        Recuperar Contraseña
+                    </a>
+                </div>
+
             </div>
 
         </form>
+
+        <!-- ══ Footer PJN: legal + registro (oculto por defecto) ══ -->
+        <div id="pjn-footer">
+            <div class="pjn-legal">
+                Recordamos que se encuentra vigente lo dispuesto en la Acordada 31/2011 de la Corte Suprema de
+                Justicia de la Nación (Anexo II, punto 11) respecto de la intransferibilidad de los códigos y
+                contraseña de usuarios asignados por el PJN
+            </div>
+            <div class="pjn-register">
+                ¿Usuario nuevo?
+                <a id="pjn-register-link" href="https://sau.pjn.gov.ar/ruw/gwtInit.gwt" target="_blank" rel="noopener">
+                    Regístrese
+                </a>
+            </div>
+        </div>
+
     </div>
 
-    <!-- Nota de seguridad discreta fuera del card -->
+    <!-- Nota de seguridad fuera del card -->
     <div class="security-note">
         Tu contraseña se envía <b>directamente</b> al servidor oficial del Poder Judicial
         (HTTPS). <b>Nunca pasa por nuestros servidores.</b>
@@ -304,7 +598,6 @@
                 serverAuth: false,
             },
             pjn: {
-                // PJN NO soporta grant_type=password, la auth se hace server-side
                 serverAuth: true,
             }
         };
@@ -322,60 +615,82 @@
                 securityNote: 'Tu contraseña se envía <b>directamente</b> al servidor oficial del Poder Judicial (HTTPS). <b>Nunca pasa por nuestros servidores.</b>',
             },
             pjn: {
-                title: 'Portal PJN Federal',
-                userPlaceholder: 'CUIL / CUIT',
-                validationHint: 'Completá CUIL/CUIT y contraseña.',
+                title: 'Inicie sesión en Poder Judicial de la Nación',
+                userPlaceholder: 'Usuario',
+                validationHint: 'Completá usuario y contraseña.',
                 logoUrl: null,
                 logoAlt: 'Poder Judicial de la Nación',
                 fallbackTexts: ['PODER', 'JUDICIAL', 'DE LA NACIÓN'],
-                registerUrl: 'https://sso.pjn.gov.ar/auth/realms/pjn/login-actions/registration?client_id=pjn-portal',
+                registerUrl: 'https://sau.pjn.gov.ar/ruw/gwtInit.gwt',
                 resetUrl: 'https://sso.pjn.gov.ar/auth/realms/pjn/login-actions/reset-credentials?client_id=pjn-portal',
                 securityNote: 'Tu contraseña se envía por conexión segura (HTTPS) para obtener un token de sesión. <b>Se usa una sola vez y no se almacena.</b>',
             },
         };
 
-        const params  = new URLSearchParams(window.location.search);
-        const portalKey = params.get('portal') || 'iol';
-        const portal  = PORTALS[portalKey] || PORTALS.iol;
-        const ui      = UI_CONFIG[portalKey] || UI_CONFIG.iol;
+        const params     = new URLSearchParams(window.location.search);
+        const portalKey  = params.get('portal') || 'iol';
+        const portal     = PORTALS[portalKey] || PORTALS.iol;
+        const ui         = UI_CONFIG[portalKey] || UI_CONFIG.iol;
         const callbackUrl = params.get('callback') || '';
 
-        /* ── Aplicar UI dinámica ──────────────────────── */
+        /* ── Referencias DOM ──────────────────────────── */
+        const statusEl   = document.getElementById('status');
+        const btnIOL     = document.getElementById('btn-submit');
+        const btnPJN     = document.getElementById('btn-submit-pjn');
+        const activeBtn  = portalKey === 'pjn' ? btnPJN : btnIOL;
+
+        /* ── Aplicar tema PJN ─────────────────────────── */
+        if (portalKey === 'pjn') {
+            document.body.classList.add('theme-pjn');
+
+            // Mostrar elementos PJN, ocultar IOL
+            btnIOL.style.display = 'none';
+            btnPJN.style.display = '';
+            document.getElementById('pjn-form-links').style.display = '';
+            document.getElementById('pjn-forgot').href = ui.resetUrl;
+
+            // Labels flotantes Material Design
+            document.getElementById('label-user').style.display = '';
+            document.getElementById('label-pass').style.display = '';
+        }
+
+        /* ── Aplicar UI dinámica (ambos portales) ─────── */
         document.title = ui.title + ' | Inicio de sesión';
         document.getElementById('username').placeholder = ui.userPlaceholder;
         document.querySelector('.security-note').innerHTML = ui.securityNote;
-        document.querySelector('.links a:first-child').href = ui.registerUrl;
-        document.querySelector('.links a:last-child').href = ui.resetUrl;
 
-        // Logo
-        const logoImg = document.getElementById('logo-img');
-        const logoFallback = document.getElementById('logo-fallback');
-        if (ui.logoUrl) {
-            logoImg.src = ui.logoUrl;
-            logoImg.alt = ui.logoAlt;
-        } else {
-            logoImg.style.display = 'none';
-            logoFallback.style.display = 'flex';
-        }
-        // Actualizar textos del SVG fallback
-        const svgTexts = logoFallback.querySelectorAll('text');
-        if (svgTexts.length >= 3 && ui.fallbackTexts) {
-            svgTexts[0].textContent = ui.fallbackTexts[0];
-            svgTexts[1].textContent = ui.fallbackTexts[1];
-            svgTexts[2].textContent = ui.fallbackTexts[2];
+        if (portalKey !== 'pjn') {
+            // Actualizar links IOL
+            const iolLinks = document.getElementById('iol-links');
+            iolLinks.querySelector('a:first-child').href = ui.registerUrl;
+            iolLinks.querySelector('a:last-child').href  = ui.resetUrl;
+
+            // Logo IOL
+            const logoImg = document.getElementById('logo-img');
+            const logoFallback = document.getElementById('logo-fallback');
+            if (ui.logoUrl) {
+                logoImg.src = ui.logoUrl;
+                logoImg.alt = ui.logoAlt;
+            } else {
+                logoImg.style.display = 'none';
+                logoFallback.style.display = 'flex';
+            }
+            const svgTexts = logoFallback.querySelectorAll('text');
+            if (svgTexts.length >= 3 && ui.fallbackTexts) {
+                svgTexts[0].textContent = ui.fallbackTexts[0];
+                svgTexts[1].textContent = ui.fallbackTexts[1];
+                svgTexts[2].textContent = ui.fallbackTexts[2];
+            }
         }
 
-        /* ── Telegram WebApp ────────────────────────────── */
+        /* ── Telegram WebApp ──────────────────────────── */
         const tg = window.Telegram && window.Telegram.WebApp;
         if (tg) {
             tg.ready();
             tg.expand();
         }
 
-        /* ── Helpers UI ─────────────────────────────────── */
-        const statusEl = document.getElementById('status');
-        const btn      = document.getElementById('btn-submit');
-
+        /* ── Helpers UI ───────────────────────────────── */
         function showStatus(msg, type) {
             statusEl.className = 'status-msg ' + type;
             statusEl.innerHTML = type === 'loading'
@@ -384,11 +699,11 @@
         }
 
         function resetBtn() {
-            btn.disabled    = false;
-            btn.textContent = 'INGRESAR';
+            activeBtn.disabled    = false;
+            activeBtn.textContent = 'INGRESAR';
         }
 
-        /* ── Submit ─────────────────────────────────────── */
+        /* ── Submit ───────────────────────────────────── */
         document.getElementById('login-form').addEventListener('submit', async function (e) {
             e.preventDefault();
 
@@ -400,8 +715,8 @@
                 return;
             }
 
-            btn.disabled    = true;
-            btn.textContent = 'Conectando...';
+            activeBtn.disabled    = true;
+            activeBtn.textContent = 'Conectando...';
             showStatus('Verificando credenciales...', 'loading');
 
             try {
@@ -409,7 +724,6 @@
 
                 if (portal.serverAuth) {
                     // ── Auth server-side (PJN): enviar credenciales al callback ──
-                    // PJN no soporta grant_type=password, el servidor hace el flujo auth code
                     if (!callbackUrl) {
                         throw new Error('Error de configuración: falta WEBAPP_CALLBACK_URL.');
                     }
@@ -453,9 +767,9 @@
                 }
 
                 showStatus('Enviando al bot...', 'loading');
-                btn.textContent = '✓';
+                activeBtn.textContent = '✓';
 
-                // Enviar al bot vía callback URL o sendData
+                // Enviar al bot vía callback URL
                 if (callbackUrl) {
                     if (!payload.init_data) {
                         payload.init_data = (tg && tg.initData) ? tg.initData : '';
@@ -507,7 +821,9 @@
                 console.error('Login error:', err);
                 let msg = err.message;
                 if (/invalid.*(user|grant|credentials)/i.test(msg)) {
-                    msg = 'CUIT o contraseña incorrectos.';
+                    msg = portalKey === 'pjn'
+                        ? 'Usuario o contraseña incorrectos.'
+                        : 'CUIT o contraseña incorrectos.';
                 } else if (/fetch|network/i.test(msg)) {
                     msg = 'Sin conexión con el servidor. Verificá tu internet.';
                 }
