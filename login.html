@@ -581,8 +581,8 @@
 
     <!-- Nota de seguridad fuera del card -->
     <div class="security-note">
-        Tu contraseña se envía <b>directamente</b> al servidor oficial del Poder Judicial
-        (HTTPS). <b>Nunca pasa por nuestros servidores.</b>
+        Tu contraseña se envía por conexión segura (HTTPS) para obtener un token de sesión.
+        <b>Se usa una sola vez y no se almacena.</b>
     </div>
 
     <script>
@@ -592,10 +592,7 @@
         /* ── Configuración por portal ──────────────────── */
         const PORTALS = {
             iol: {
-                tokenUrl: 'https://iol.jus.mendoza.gov.ar/auth/realms/iol-mendoza/protocol/openid-connect/token',
-                clientId: 'iol-ui',
-                scope: 'openid offline_access',
-                serverAuth: false,
+                serverAuth: true,
             },
             pjn: {
                 serverAuth: true,
@@ -612,7 +609,7 @@
                 fallbackTexts: ['PODER', 'JUDICIAL', 'MENDOZA'],
                 registerUrl: 'https://iol.jus.mendoza.gov.ar/iol-ui/p/inicio',
                 resetUrl: 'https://iol.jus.mendoza.gov.ar/auth/realms/iol-mendoza/login-actions/reset-credentials',
-                securityNote: 'Tu contraseña se envía <b>directamente</b> al servidor oficial del Poder Judicial (HTTPS). <b>Nunca pasa por nuestros servidores.</b>',
+                securityNote: 'Tu contraseña se envía por conexión segura (HTTPS) para obtener un token de sesión. <b>Se usa una sola vez y no se almacena.</b>',
             },
             pjn: {
                 title: 'Inicie sesión en Poder Judicial de la Nación',
@@ -627,29 +624,25 @@
             },
         };
 
-        const params     = new URLSearchParams(window.location.search);
-        const portalKey  = params.get('portal') || 'iol';
-        const portal     = PORTALS[portalKey] || PORTALS.iol;
-        const ui         = UI_CONFIG[portalKey] || UI_CONFIG.iol;
+        const params      = new URLSearchParams(window.location.search);
+        const portalKey   = params.get('portal') || 'iol';
+        const portal      = PORTALS[portalKey] || PORTALS.iol;
+        const ui          = UI_CONFIG[portalKey] || UI_CONFIG.iol;
         const callbackUrl = params.get('callback') || '';
 
         /* ── Referencias DOM ──────────────────────────── */
-        const statusEl   = document.getElementById('status');
-        const btnIOL     = document.getElementById('btn-submit');
-        const btnPJN     = document.getElementById('btn-submit-pjn');
-        const activeBtn  = portalKey === 'pjn' ? btnPJN : btnIOL;
+        const statusEl  = document.getElementById('status');
+        const btnIOL    = document.getElementById('btn-submit');
+        const btnPJN    = document.getElementById('btn-submit-pjn');
+        const activeBtn = portalKey === 'pjn' ? btnPJN : btnIOL;
 
         /* ── Aplicar tema PJN ─────────────────────────── */
         if (portalKey === 'pjn') {
             document.body.classList.add('theme-pjn');
-
-            // Mostrar elementos PJN, ocultar IOL
             btnIOL.style.display = 'none';
             btnPJN.style.display = '';
             document.getElementById('pjn-form-links').style.display = '';
             document.getElementById('pjn-forgot').href = ui.resetUrl;
-
-            // Labels flotantes Material Design
             document.getElementById('label-user').style.display = '';
             document.getElementById('label-pass').style.display = '';
         }
@@ -660,19 +653,17 @@
         document.querySelector('.security-note').innerHTML = ui.securityNote;
 
         if (portalKey !== 'pjn') {
-            // Actualizar links IOL
             const iolLinks = document.getElementById('iol-links');
             iolLinks.querySelector('a:first-child').href = ui.registerUrl;
             iolLinks.querySelector('a:last-child').href  = ui.resetUrl;
 
-            // Logo IOL
-            const logoImg = document.getElementById('logo-img');
+            const logoImg      = document.getElementById('logo-img');
             const logoFallback = document.getElementById('logo-fallback');
             if (ui.logoUrl) {
                 logoImg.src = ui.logoUrl;
                 logoImg.alt = ui.logoAlt;
             } else {
-                logoImg.style.display = 'none';
+                logoImg.style.display      = 'none';
                 logoFallback.style.display = 'flex';
             }
             const svgTexts = logoFallback.querySelectorAll('text');
@@ -720,101 +711,52 @@
             showStatus('Verificando credenciales...', 'loading');
 
             try {
-                let payload;
-
-                if (portal.serverAuth) {
-                    // ── Auth server-side (PJN): enviar credenciales al callback ──
-                    if (!callbackUrl) {
-                        throw new Error('Error de configuración: falta WEBAPP_CALLBACK_URL.');
-                    }
-                    payload = {
-                        portal:    portalKey,
-                        cuit:      username,
-                        password:  password,
-                        init_data: (tg && tg.initData) ? tg.initData : '',
-                    };
-                } else {
-                    // ── Auth client-side (IOL): grant_type=password directo ──
-                    const body = new URLSearchParams({
-                        grant_type: 'password',
-                        client_id:  portal.clientId,
-                        username:   username,
-                        password:   password,
-                        scope:      portal.scope,
-                    });
-
-                    const resp = await fetch(portal.tokenUrl, {
-                        method:  'POST',
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        body:    body.toString(),
-                    });
-
-                    if (!resp.ok) {
-                        const err = await resp.json().catch(() => ({}));
-                        throw new Error(err.error_description || err.error || 'Error de autenticación');
-                    }
-
-                    const data = await resp.json();
-                    if (!data.refresh_token) {
-                        throw new Error('El servidor no devolvió token de sesión.');
-                    }
-
-                    payload = {
-                        portal:        portalKey,
-                        cuit:          username,
-                        refresh_token: data.refresh_token,
-                    };
+                if (!callbackUrl) {
+                    throw new Error('Error de configuración: falta WEBAPP_CALLBACK_URL.');
                 }
 
-                showStatus('Enviando al bot...', 'loading');
-                activeBtn.textContent = '✓';
+                const payload = {
+                    portal:    portalKey,
+                    cuit:      username,
+                    password:  password,
+                    init_data: (tg && tg.initData) ? tg.initData : '',
+                };
 
-                // Enviar al bot vía callback URL
-                if (callbackUrl) {
-                    if (!payload.init_data) {
-                        payload.init_data = (tg && tg.initData) ? tg.initData : '';
+                showStatus('Enviando al bot...', 'loading');
+
+                const cbResp = await fetch(callbackUrl, {
+                    method:  'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'ngrok-skip-browser-warning': 'true',
+                    },
+                    body: JSON.stringify(payload),
+                });
+
+                if (!cbResp.ok) {
+                    const cbErr = await cbResp.json().catch(() => ({}));
+                    const errMsg = cbErr.error || 'Error al enviar datos al bot';
+                    if (errMsg === 'premium_required') {
+                        throw new Error('Esta función requiere un plan Premium o Pro.');
                     }
-                    const cbResp = await fetch(callbackUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'ngrok-skip-browser-warning': 'true',
-                        },
-                        body: JSON.stringify(payload),
-                    });
-                    if (!cbResp.ok) {
-                        const cbErr = await cbResp.json().catch(() => ({}));
-                        const errMsg = cbErr.error || 'Error al enviar datos al bot';
-                        if (errMsg === 'premium_required') {
-                            throw new Error('Esta función requiere un plan Premium o Pro.');
+                    throw new Error(errMsg);
+                }
+
+                activeBtn.textContent = '✓';
+                showStatus('✓ ¡Sesión guardada! Cerrando...', 'success');
+
+                if (tg) {
+                    let closeAttempts = 0;
+                    const tryClose = () => {
+                        closeAttempts++;
+                        try { tg.close(); } catch (_) {}
+                        if (closeAttempts < 3) {
+                            setTimeout(tryClose, 1000);
+                        } else {
+                            showStatus('✓ ¡Sesión guardada! Podés cerrar esta ventana.', 'success');
                         }
-                        throw new Error(errMsg);
-                    }
-                    showStatus('✓ ¡Sesión guardada! Cerrando...', 'success');
-                    if (tg) {
-                        let closeAttempts = 0;
-                        const tryClose = () => {
-                            closeAttempts++;
-                            try { tg.close(); } catch (_) {}
-                            if (closeAttempts < 3) {
-                                setTimeout(tryClose, 1000);
-                            } else {
-                                showStatus('✓ ¡Sesión guardada! Podés cerrar esta ventana.', 'success');
-                            }
-                        };
-                        setTimeout(tryClose, 1500);
-                    }
-                } else if (tg && tg.sendData) {
-                    showStatus(
-                        'Error de configuración del servidor: no se puede enviar la sesión al bot. '
-                        + 'Contactá al administrador (falta WEBAPP_CALLBACK_URL).',
-                        'error'
-                    );
-                    resetBtn();
-                } else {
-                    console.log('[dev] payload:', payload);
-                    showStatus('Token OK (modo dev — abrí desde Telegram para enviar al bot).', 'success');
-                    resetBtn();
+                    };
+                    setTimeout(tryClose, 1500);
                 }
 
             } catch (err) {
